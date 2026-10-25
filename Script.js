@@ -19,7 +19,6 @@ function processAndLoad() {
     }
 
     // STRICT REGEX: Requires 5 to 8 characters containing BOTH letters and numbers
-    // This automatically blocks pure words like "MASSIVE", "WEEKEND", or "SATURDAY"
     const matches = rawText.match(/\b(?=.*[A-Z])(?=.*\d)[A-Z0-9]{5,8}\b/g);
     
     if (!matches || matches.length === 0) {
@@ -27,7 +26,6 @@ function processAndLoad() {
         return;
     }
 
-    // Filter out any leftover common English words if needed
     const ignoreList = ["BOOM", "TODAY", "SPORTYBET", "STAKING", "EACH", "CODES"];
     const filteredCodes = matches.filter(code => !ignoreList.includes(code.toUpperCase()));
     const uniqueCodes = [...new Set(filteredCodes)];
@@ -37,16 +35,13 @@ function processAndLoad() {
         return;
     }
 
-    // Reset log box text
     document.getElementById('statusLog').innerHTML = "Status: Initializing...";
 
-    // Get selected mode
     const selectedMode = document.querySelector('input[name="workMode"]:checked').value;
     const stakeVal = document.getElementById('presetStake').value || 100;
 
     logStatus(`Extracted ${uniqueCodes.length} valid codes: ${uniqueCodes.join(', ')}`);
     
-    // Start automated sequence
     startAutomationLoop(uniqueCodes, selectedMode, stakeVal);
 }
 
@@ -57,14 +52,12 @@ async function startAutomationLoop(codes, mode, stakeAmount) {
         let code = codes[i];
         logStatus(`[${i + 1}/${codes.length}] Loading code: ${code}...`);
 
-        // Wait 1.5 seconds between each code simulation
         await sleep(1500);
     }
 
     logStatus("🎉 All valid codes processed successfully!");
 }
 
-// Function to export extracted codes directly to a local .txt file
 function downloadCodesAsTxt() {
     const rawText = document.getElementById('rawInput').value;
     
@@ -105,5 +98,4 @@ function downloadCodesAsTxt() {
     }, 100);
 
     logStatus(`💾 Saved ${uniqueCodes.length} codes to your Downloads folder!`);
-      }
-        
+}
